@@ -3,7 +3,8 @@ import json
 from django.shortcuts import render
 from django.http      import JsonResponse
 
-from users.models import GradeUser, PedalUser
+from grade_settings import STIBEE_API_KEY
+from users.models   import GradeUser, PedalUser
 
 class GradeMailSubscribeView(View):
     def post(self, request):
@@ -14,8 +15,10 @@ class GradeMailSubscribeView(View):
             if GradeUser.objects.filter(email=email).exists():
                 return JsonResponse({'MESSAGE':'existing_user'}, status=400)
 
+            GradeUser.objects.create(
+                email=email
+            )
 
-        
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
 
