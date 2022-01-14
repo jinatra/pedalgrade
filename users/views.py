@@ -28,7 +28,7 @@ class MailSubscribeView(View):
                         'email' : email
                     }
                 ]
-            }
+            } 
 
             if GradeUser.objects.filter(email=email).exists():
                 return JsonResponse({'MESSAGE':'existing_grade_user'}, status=400)
