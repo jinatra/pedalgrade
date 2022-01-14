@@ -7,7 +7,7 @@ from django.http      import JsonResponse
 
 from boards.models import Board, Image
 
-class BoardView(View):
+class BoardCreateView(View):
     def post(self, request):
         try:
             data = json.loads(request.body)
@@ -38,6 +38,31 @@ class BoardView(View):
                     )
 
             return JsonResponse({'MESSAGE':'board_created'}, status=201)
+
+        except KeyError:
+            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+
+class BoardReadView(View):
+    def get(self, request, board_id):
+        try:
+            if not Board.objects.filter(id=board_id).exists():
+                return JsonResponse({'MESSAGE':'board_not_exists'}, status=404)
+
+            board        = Board.objects.get(id=board_id)
+            thumb_img    = Image.objects.get(board_id=board.id, type='thumb')
+            content_imgs = Image.objects.filter(board_id=board.id, type='content')
+
+            results = {
+                'title' : board.title,
+                'content' : board.content,
+                'type' : board.type,
+                'thumb_img' : thumb_img.img_url,
+                'content_imgs' : [
+                    content_img.img_url for content_img in content_imgs
+                ]
+            }
+
+            return JsonResponse(results, status=200)
 
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)

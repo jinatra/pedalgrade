@@ -1,7 +1,8 @@
 from django.urls import path
 
-from boards.views import BoardView
+from boards.views import BoardCreateView, BoardReadView
 
 urlpatterns = [
-    path('', BoardView.as_view()),
+    path('', BoardCreateView.as_view()),
+    path('/<int:board_id>', BoardReadView.as_view() )
 ]
