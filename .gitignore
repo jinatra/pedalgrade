@@ -382,3 +382,5 @@ zsdoc/data
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm,visualstudiocode,vim,macos,zsh,linux
 
 grade_settings.py
+
+__pycache__
