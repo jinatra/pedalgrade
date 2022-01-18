@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.views     import View
 from django.db        import transaction
 from django.http      import JsonResponse
+from django.db.models import Q
 
 from boards.models import Board, Image
 
@@ -63,6 +64,28 @@ class BoardReadView(View):
             }
 
             return JsonResponse(results, status=200)
+
+        except KeyError:
+            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+
+class MainPageView(View):
+    def get(self, request):
+        try:
+            type   = request.GET.get('type', None)
+            OFFSET = 0
+            LIMIT  = 16
+
+            boards = Board.objects.filter(type=type).order_by('-created_at')[OFFSET:LIMIT]
+
+            results = [
+                {
+                    'title' : board.title,
+                    'content' : board.content,
+                    'thumb' : Image.objects.get(board_id=board.id, type='thumb').img_url
+                } for board in boards
+            ]
+
+            return JsonResponse({'MESSAGE':results}, status=200)
 
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
