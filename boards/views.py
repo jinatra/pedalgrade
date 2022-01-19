@@ -88,5 +88,5 @@ class MainPageView(View):
             return JsonResponse({'MESSAGE':results}, status=200)
 
         except KeyError:
-            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+            return JsonResponse({'MESSAGE':'KEY_ERROR_1'}, status=400)
 
